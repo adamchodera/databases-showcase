@@ -3,6 +3,7 @@ package pl.adamchodera.databasesshowcase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.EditText;
@@ -25,6 +26,9 @@ public class TaskDetailsActivity extends AppCompatActivity {
 
     @BindView(R.id.description_edit_text)
     EditText descriptionEditText;
+
+    @BindView(R.id.save_task_button)
+    FloatingActionButton floatingActionButton;
 
     private TasksDataSource tasksDataSource;
 
@@ -90,6 +94,7 @@ public class TaskDetailsActivity extends AppCompatActivity {
                 message = "Task saved!";
                 titleEditText.setEnabled(false);
                 descriptionEditText.setEnabled(false);
+                floatingActionButton.setImageResource(R.drawable.ic_mode_edit_white_24px);
             } else {
                 message = "Error occurred..";
             }

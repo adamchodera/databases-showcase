@@ -50,6 +50,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:clickable="true"
+        android:src="@drawable/ic_done_white_24px"
         app:layout_anchor="@id/task_form_editable"
         app:layout_anchorGravity="bottom|right"/>
 
