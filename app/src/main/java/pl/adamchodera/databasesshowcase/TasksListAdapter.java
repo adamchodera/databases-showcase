@@ -20,12 +20,9 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListAdapter.View
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        // Inflate the custom layout
         View contactView = inflater.inflate(R.layout.item_task, parent, false);
 
-        // Return a new holder instance
-        ViewHolder viewHolder = new ViewHolder(contactView);
-        return viewHolder;
+        return new ViewHolder(contactView);
     }
 
     @Override
@@ -33,11 +30,15 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListAdapter.View
         TaskEntity task = tasks.get(position);
 
         TextView textView = viewHolder.taskTitleView;
-        textView.setText(task.getTitle() + task.getId());
+        String titleWithId = task.getTitle() + " ID:" + task.getId();
+        textView.setText(titleWithId);
     }
 
     @Override
     public int getItemCount() {
+        if (tasks == null) {
+            return 0;
+        }
         return tasks.size();
     }
 

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:id="@+id/coordinator_layout"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="pl.adamchodera.databasesshowcase.MainActivity">
+    tools:context="pl.adamchodera.databasesshowcase.TasksListActivity">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"

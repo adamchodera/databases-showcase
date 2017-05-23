@@ -40,14 +40,28 @@ public class TasksDataSource {
     }
 
     public static synchronized TasksDataSource getInstance(@NonNull Context context) {
-        // Use the application context, which will ensure that you
-        // don't accidentally leak an Activity's context.
+        // Use the application context, which will ensure that you don't accidentally leak an Activity's context.
         // See this article for more information:
         // http://www.androiddesignpatterns.com/2012/05/correctly-managing-your-sqlite-database.html
         if (INSTANCE == null) {
             INSTANCE = new TasksDataSource(context.getApplicationContext());
         }
         return INSTANCE;
+    }
+
+    public void closeDatabase() {
+        databaseHelper.close();
+    }
+
+    public void saveTask(@NonNull TaskEntity task) {
+        SQLiteDatabase db = databaseHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(TasksContract.TaskEntry.COLUMN_NAME_TITLE, task.getTitle());
+        values.put(TasksContract.TaskEntry.COLUMN_NAME_DESCRIPTION, task.getDescription());
+        values.put(TasksContract.TaskEntry.COLUMN_NAME_COMPLETED, task.isCompleted());
+
+        db.insertOrThrow(TasksContract.TaskEntry.TABLE_NAME, null, values);
     }
 
     public List<TaskEntity> getTasks() {
@@ -62,8 +76,7 @@ public class TasksDataSource {
                 TasksContract.TaskEntry.COLUMN_NAME_COMPLETED
         };
 
-        Cursor c = db.query(
-                TasksContract.TaskEntry.TABLE_NAME, projection, null, null, null, null, null);
+        Cursor c = db.query(TasksContract.TaskEntry.TABLE_NAME, projection, null, null, null, null, null);
 
         if (c != null && c.getCount() > 0) {
             while (c.moveToNext()) {
@@ -82,21 +95,6 @@ public class TasksDataSource {
         }
 
         return tasks;
-    }
-
-    public void saveTask(@NonNull TaskEntity task) {
-        SQLiteDatabase db = databaseHelper.getWritableDatabase();
-
-        ContentValues values = new ContentValues();
-        values.put(TasksContract.TaskEntry.COLUMN_NAME_TITLE, task.getTitle());
-        values.put(TasksContract.TaskEntry.COLUMN_NAME_DESCRIPTION, task.getDescription());
-        values.put(TasksContract.TaskEntry.COLUMN_NAME_COMPLETED, task.isCompleted());
-
-        db.insert(TasksContract.TaskEntry.TABLE_NAME, null, values);
-    }
-
-    public void closeDatabase() {
-        databaseHelper.close();
     }
 
     public TaskEntity getTask(@NonNull String taskId) {

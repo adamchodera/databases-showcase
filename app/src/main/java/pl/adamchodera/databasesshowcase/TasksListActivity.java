@@ -1,6 +1,7 @@
 package pl.adamchodera.databasesshowcase;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,13 +15,14 @@ import butterknife.OnClick;
 import pl.adamchodera.databasesshowcase.data.TaskEntity;
 import pl.adamchodera.databasesshowcase.data.TasksDataSource;
 
-public class MainActivity extends AppCompatActivity {
+public class TasksListActivity extends AppCompatActivity {
 
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
 
     private TasksDataSource tasksDataSource;
     private TasksListAdapter tasksListAdapter;
+    private LoadTasksFromDatabaseAsyncTask loadTasksFromDatabaseAsyncTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,21 +45,37 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        final List<TaskEntity> tasks = tasksDataSource.getTasks();
-        tasksListAdapter.setTasks(tasks);
-        tasksListAdapter.notifyDataSetChanged();
+        loadTasksFromDatabaseAsyncTask = new LoadTasksFromDatabaseAsyncTask();
+        loadTasksFromDatabaseAsyncTask.execute();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
 
+        loadTasksFromDatabaseAsyncTask.cancel(true);
         tasksDataSource.closeDatabase();
     }
 
     @OnClick(R.id.add_task_button)
     public void goToAddNoteActivity() {
-        Intent intent = new Intent(this, NoteDetailsActivity.class);
+        Intent intent = new Intent(this, TaskDetailsActivity.class);
         startActivity(intent);
+    }
+
+    private class LoadTasksFromDatabaseAsyncTask extends AsyncTask<String, Void, List<TaskEntity>> {
+
+        @Override
+        protected List<TaskEntity> doInBackground(String... params) {
+            return tasksDataSource.getTasks();
+        }
+
+        @Override
+        protected void onPostExecute(final List<TaskEntity> tasks) {
+            super.onPostExecute(tasks);
+
+            tasksListAdapter.setTasks(tasks);
+            tasksListAdapter.notifyDataSetChanged();
+        }
     }
 }

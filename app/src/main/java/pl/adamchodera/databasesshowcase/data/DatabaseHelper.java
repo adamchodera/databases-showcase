@@ -21,7 +21,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 5;
 
     public static final String DATABASE_NAME = "Tasks.db";
 
@@ -29,13 +29,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String BOOLEAN_TYPE = " INTEGER";
 
-    private static final String COMMA_SEP = ",";
+    private static final String COMMA = ",";
 
     private static final String SQL_CREATE_ENTRIES =
             "CREATE TABLE " + TasksContract.TaskEntry.TABLE_NAME + " (" +
                     TasksContract.TaskEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    TasksContract.TaskEntry.COLUMN_NAME_TITLE + TEXT_TYPE + COMMA_SEP +
-                    TasksContract.TaskEntry.COLUMN_NAME_DESCRIPTION + TEXT_TYPE + COMMA_SEP +
+                    TasksContract.TaskEntry.COLUMN_NAME_TITLE + TEXT_TYPE + COMMA +
+                    TasksContract.TaskEntry.COLUMN_NAME_DESCRIPTION + TEXT_TYPE + COMMA +
                     TasksContract.TaskEntry.COLUMN_NAME_COMPLETED + BOOLEAN_TYPE +
                     " )";
 
@@ -43,6 +43,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE_ENTRIES);
     }
