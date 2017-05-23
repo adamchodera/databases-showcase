@@ -18,13 +18,13 @@ public class TaskDetailsActivity extends AppCompatActivity {
 
     @BindView(R.id.coordinator_layout)
     CoordinatorLayout coordinatorLayout;
-    
+
     private TasksDataSource tasksDataSource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_note_details);
+        setContentView(R.layout.activity_task_details);
         ButterKnife.bind(this);
 
         tasksDataSource = TasksDataSource.getInstance(this);
