@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/task_form"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+    </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/save_task_button"
@@ -15,6 +23,8 @@
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:clickable="true"/>
+        android:clickable="true"
+        app:layout_anchor="@id/task_form"
+        app:layout_anchorGravity="bottom|right"/>
 
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

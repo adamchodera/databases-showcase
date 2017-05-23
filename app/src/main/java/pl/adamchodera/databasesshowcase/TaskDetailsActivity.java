@@ -2,9 +2,11 @@ package pl.adamchodera.databasesshowcase;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Toast;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import pl.adamchodera.databasesshowcase.data.TaskEntity;
@@ -13,6 +15,10 @@ import pl.adamchodera.databasesshowcase.data.TasksDataSource;
 public class TaskDetailsActivity extends AppCompatActivity {
 
     private static final String INTENT_TASK_ID = "ARG_task_id";
+
+    @BindView(R.id.coordinator_layout)
+    CoordinatorLayout coordinatorLayout;
+    
     private TasksDataSource tasksDataSource;
 
     @Override
@@ -76,7 +82,8 @@ public class TaskDetailsActivity extends AppCompatActivity {
                 message = "Error occurred..";
             }
 
-            Toast.makeText(TaskDetailsActivity.this, message, Toast.LENGTH_SHORT).show();
+            Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_LONG)
+                    .show();
         }
     }
 }
