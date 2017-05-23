@@ -88,6 +88,8 @@ public class TaskDetailsActivity extends AppCompatActivity {
             String message;
             if (success) {
                 message = "Task saved!";
+                titleEditText.setEnabled(false);
+                descriptionEditText.setEnabled(false);
             } else {
                 message = "Error occurred..";
             }
