@@ -32,11 +32,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COMMA = ",";
 
     private static final String SQL_CREATE_ENTRIES =
-            "CREATE TABLE " + TasksContract.TaskEntry.TABLE_NAME + " (" +
-                    TasksContract.TaskEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    TasksContract.TaskEntry.COLUMN_NAME_TITLE + TEXT_TYPE + COMMA +
-                    TasksContract.TaskEntry.COLUMN_NAME_DESCRIPTION + TEXT_TYPE + COMMA +
-                    TasksContract.TaskEntry.COLUMN_NAME_COMPLETED + BOOLEAN_TYPE +
+            "CREATE TABLE " + TodoContract.TaskEntry.TABLE_NAME + " (" +
+                    TodoContract.TaskEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    TodoContract.TaskEntry.COLUMN_NAME_TITLE + TEXT_TYPE + COMMA +
+                    TodoContract.TaskEntry.COLUMN_NAME_DESCRIPTION + TEXT_TYPE + COMMA +
+                    TodoContract.TaskEntry.COLUMN_NAME_COMPLETED + BOOLEAN_TYPE +
                     " )";
 
     public DatabaseHelper(Context context) {
@@ -49,7 +49,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TasksContract.TaskEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + TodoContract.TaskEntry.TABLE_NAME);
         db.execSQL(SQL_CREATE_ENTRIES);
     }
 }

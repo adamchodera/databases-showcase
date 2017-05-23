@@ -57,11 +57,11 @@ public class TasksDataSource {
         SQLiteDatabase db = databaseHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(TasksContract.TaskEntry.COLUMN_NAME_TITLE, task.getTitle());
-        values.put(TasksContract.TaskEntry.COLUMN_NAME_DESCRIPTION, task.getDescription());
-        values.put(TasksContract.TaskEntry.COLUMN_NAME_COMPLETED, task.isCompleted());
+        values.put(TodoContract.TaskEntry.COLUMN_NAME_TITLE, task.getTitle());
+        values.put(TodoContract.TaskEntry.COLUMN_NAME_DESCRIPTION, task.getDescription());
+        values.put(TodoContract.TaskEntry.COLUMN_NAME_COMPLETED, task.isCompleted());
 
-        db.insertOrThrow(TasksContract.TaskEntry.TABLE_NAME, null, values);
+        db.insertOrThrow(TodoContract.TaskEntry.TABLE_NAME, null, values);
     }
 
     public List<TaskEntity> getTasks() {
@@ -70,22 +70,22 @@ public class TasksDataSource {
         SQLiteDatabase db = databaseHelper.getReadableDatabase();
 
         String[] projection = {
-                TasksContract.TaskEntry._ID,
-                TasksContract.TaskEntry.COLUMN_NAME_TITLE,
-                TasksContract.TaskEntry.COLUMN_NAME_DESCRIPTION,
-                TasksContract.TaskEntry.COLUMN_NAME_COMPLETED
+                TodoContract.TaskEntry._ID,
+                TodoContract.TaskEntry.COLUMN_NAME_TITLE,
+                TodoContract.TaskEntry.COLUMN_NAME_DESCRIPTION,
+                TodoContract.TaskEntry.COLUMN_NAME_COMPLETED
         };
 
-        Cursor c = db.query(TasksContract.TaskEntry.TABLE_NAME, projection, null, null, null, null, null);
+        Cursor c = db.query(TodoContract.TaskEntry.TABLE_NAME, projection, null, null, null, null, null);
 
         if (c != null && c.getCount() > 0) {
             while (c.moveToNext()) {
-                String itemId = c.getString(c.getColumnIndexOrThrow(TasksContract.TaskEntry._ID));
-                String title = c.getString(c.getColumnIndexOrThrow(TasksContract.TaskEntry.COLUMN_NAME_TITLE));
+                String itemId = c.getString(c.getColumnIndexOrThrow(TodoContract.TaskEntry._ID));
+                String title = c.getString(c.getColumnIndexOrThrow(TodoContract.TaskEntry.COLUMN_NAME_TITLE));
                 String description =
-                        c.getString(c.getColumnIndexOrThrow(TasksContract.TaskEntry.COLUMN_NAME_DESCRIPTION));
+                        c.getString(c.getColumnIndexOrThrow(TodoContract.TaskEntry.COLUMN_NAME_DESCRIPTION));
                 boolean completed =
-                        c.getInt(c.getColumnIndexOrThrow(TasksContract.TaskEntry.COLUMN_NAME_COMPLETED)) == 1;
+                        c.getInt(c.getColumnIndexOrThrow(TodoContract.TaskEntry.COLUMN_NAME_COMPLETED)) == 1;
                 TaskEntity task = new TaskEntity(itemId, title, description, completed);
                 tasks.add(task);
             }
@@ -101,28 +101,28 @@ public class TasksDataSource {
         SQLiteDatabase db = databaseHelper.getReadableDatabase();
 
         String[] projection = {
-                TasksContract.TaskEntry._ID,
-                TasksContract.TaskEntry.COLUMN_NAME_TITLE,
-                TasksContract.TaskEntry.COLUMN_NAME_DESCRIPTION,
-                TasksContract.TaskEntry.COLUMN_NAME_COMPLETED
+                TodoContract.TaskEntry._ID,
+                TodoContract.TaskEntry.COLUMN_NAME_TITLE,
+                TodoContract.TaskEntry.COLUMN_NAME_DESCRIPTION,
+                TodoContract.TaskEntry.COLUMN_NAME_COMPLETED
         };
 
-        String selection = TasksContract.TaskEntry._ID + " LIKE ?";
+        String selection = TodoContract.TaskEntry._ID + " LIKE ?";
         String[] selectionArgs = {taskId};
 
         Cursor c = db.query(
-                TasksContract.TaskEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, null);
+                TodoContract.TaskEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, null);
 
         TaskEntity task = null;
 
         if (c != null && c.getCount() > 0) {
             c.moveToFirst();
-            String itemId = c.getString(c.getColumnIndexOrThrow(TasksContract.TaskEntry._ID));
-            String title = c.getString(c.getColumnIndexOrThrow(TasksContract.TaskEntry.COLUMN_NAME_TITLE));
+            String itemId = c.getString(c.getColumnIndexOrThrow(TodoContract.TaskEntry._ID));
+            String title = c.getString(c.getColumnIndexOrThrow(TodoContract.TaskEntry.COLUMN_NAME_TITLE));
             String description =
-                    c.getString(c.getColumnIndexOrThrow(TasksContract.TaskEntry.COLUMN_NAME_DESCRIPTION));
+                    c.getString(c.getColumnIndexOrThrow(TodoContract.TaskEntry.COLUMN_NAME_DESCRIPTION));
             boolean completed =
-                    c.getInt(c.getColumnIndexOrThrow(TasksContract.TaskEntry.COLUMN_NAME_COMPLETED)) == 1;
+                    c.getInt(c.getColumnIndexOrThrow(TodoContract.TaskEntry.COLUMN_NAME_COMPLETED)) == 1;
             task = new TaskEntity(itemId, title, description, completed);
         }
         if (c != null) {
@@ -136,47 +136,47 @@ public class TasksDataSource {
         SQLiteDatabase db = databaseHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(TasksContract.TaskEntry.COLUMN_NAME_COMPLETED, true);
+        values.put(TodoContract.TaskEntry.COLUMN_NAME_COMPLETED, true);
 
-        String selection = TasksContract.TaskEntry._ID + " LIKE ?";
+        String selection = TodoContract.TaskEntry._ID + " LIKE ?";
         String[] selectionArgs = {task.getId()};
 
-        db.update(TasksContract.TaskEntry.TABLE_NAME, values, selection, selectionArgs);
+        db.update(TodoContract.TaskEntry.TABLE_NAME, values, selection, selectionArgs);
     }
 
     public void activateTask(@NonNull TaskEntity task) {
         SQLiteDatabase db = databaseHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(TasksContract.TaskEntry.COLUMN_NAME_COMPLETED, false);
+        values.put(TodoContract.TaskEntry.COLUMN_NAME_COMPLETED, false);
 
-        String selection = TasksContract.TaskEntry._ID + " LIKE ?";
+        String selection = TodoContract.TaskEntry._ID + " LIKE ?";
         String[] selectionArgs = {task.getId()};
 
-        db.update(TasksContract.TaskEntry.TABLE_NAME, values, selection, selectionArgs);
+        db.update(TodoContract.TaskEntry.TABLE_NAME, values, selection, selectionArgs);
     }
 
     public void clearCompletedTasks() {
         SQLiteDatabase db = databaseHelper.getWritableDatabase();
 
-        String selection = TasksContract.TaskEntry.COLUMN_NAME_COMPLETED + " LIKE ?";
+        String selection = TodoContract.TaskEntry.COLUMN_NAME_COMPLETED + " LIKE ?";
         String[] selectionArgs = {"1"};
 
-        db.delete(TasksContract.TaskEntry.TABLE_NAME, selection, selectionArgs);
+        db.delete(TodoContract.TaskEntry.TABLE_NAME, selection, selectionArgs);
     }
 
     public void deleteAllTasks() {
         SQLiteDatabase db = databaseHelper.getWritableDatabase();
 
-        db.delete(TasksContract.TaskEntry.TABLE_NAME, null, null);
+        db.delete(TodoContract.TaskEntry.TABLE_NAME, null, null);
     }
 
     public void deleteTask(@NonNull String taskId) {
         SQLiteDatabase db = databaseHelper.getWritableDatabase();
 
-        String selection = TasksContract.TaskEntry._ID + " LIKE ?";
+        String selection = TodoContract.TaskEntry._ID + " LIKE ?";
         String[] selectionArgs = {taskId};
 
-        db.delete(TasksContract.TaskEntry.TABLE_NAME, selection, selectionArgs);
+        db.delete(TodoContract.TaskEntry.TABLE_NAME, selection, selectionArgs);
     }
 }
