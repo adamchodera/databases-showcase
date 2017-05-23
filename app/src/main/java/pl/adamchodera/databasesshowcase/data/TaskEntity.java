@@ -10,6 +10,10 @@ public final class TaskEntity {
 
     private final boolean completed;
 
+    public TaskEntity(String title, String description, boolean completed) {
+        this(null, title, description, completed);
+    }
+
     public TaskEntity(String id, String title, String description, boolean completed) {
         this.id = id;
         this.title = title;

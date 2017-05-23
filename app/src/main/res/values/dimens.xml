@@ -1,0 +1,7 @@
+<resources>
+
+    <dimen name="margin_standard">16dp</dimen>
+
+    <dimen name="text_size_standard">16sp</dimen>
+
+</resources>

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.EditText;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -18,6 +19,12 @@ public class TaskDetailsActivity extends AppCompatActivity {
 
     @BindView(R.id.coordinator_layout)
     CoordinatorLayout coordinatorLayout;
+
+    @BindView(R.id.title_edit_text)
+    EditText titleEditText;
+
+    @BindView(R.id.description_edit_text)
+    EditText descriptionEditText;
 
     private TasksDataSource tasksDataSource;
 
@@ -47,7 +54,10 @@ public class TaskDetailsActivity extends AppCompatActivity {
 
     @OnClick(R.id.save_task_button)
     public void saveTask() {
-        final TaskEntity task = new TaskEntity(null, "tytuł notatki", "podtyułe", false);
+        String title = titleEditText.getText().toString();
+        String description = descriptionEditText.getText().toString();
+
+        final TaskEntity task = new TaskEntity(title, description, false);
 
         new SaveTaskInDatabaseAsyncTask(task).execute();
     }

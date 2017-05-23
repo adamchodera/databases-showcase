@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Databases showcase</string>
+    <string name="hint_task_title">Title</string>
+    <string name="hint_task_description">Description</string>
 </resources>
