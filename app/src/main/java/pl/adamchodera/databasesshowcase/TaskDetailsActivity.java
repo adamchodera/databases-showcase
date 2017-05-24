@@ -16,7 +16,7 @@ import pl.adamchodera.databasesshowcase.data.TasksDataSource;
 
 public class TaskDetailsActivity extends AppCompatActivity {
 
-    private static final String INTENT_TASK_ID = "ARG_task_id";
+    public static final String INTENT_EXTRA_TASK_ID = "ARG_task_id";
 
     @BindView(R.id.coordinator_layout)
     CoordinatorLayout coordinatorLayout;
@@ -43,8 +43,8 @@ public class TaskDetailsActivity extends AppCompatActivity {
 
         tasksDataSource = TasksDataSource.getInstance(this);
 
-        final String taskId = getIntent().getStringExtra(INTENT_TASK_ID);
-        if (taskId != null) {
+        final long taskId = getIntent().getLongExtra(INTENT_EXTRA_TASK_ID, TaskEntity.DEFAULT_ID_FOR_TASK_NOT_SAVED_IN_DB);
+        if (taskId != TaskEntity.DEFAULT_ID_FOR_TASK_NOT_SAVED_IN_DB) {
             // user clicked task from the list
             setReadonlyMode();
             currentTask = tasksDataSource.getTask(taskId);

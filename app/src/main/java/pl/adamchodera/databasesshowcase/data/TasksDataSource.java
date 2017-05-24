@@ -97,7 +97,7 @@ public class TasksDataSource {
         return tasks;
     }
 
-    public TaskEntity getTask(@NonNull String taskId) {
+    public TaskEntity getTask(@NonNull long taskId) {
         SQLiteDatabase db = databaseHelper.getReadableDatabase();
 
         String[] projection = {
@@ -108,7 +108,7 @@ public class TasksDataSource {
         };
 
         String selection = TodoContract.TaskEntry._ID + " LIKE ?";
-        String[] selectionArgs = {taskId};
+        String[] selectionArgs = {String.valueOf(taskId)};
 
         Cursor c = db.query(
                 TodoContract.TaskEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, null);

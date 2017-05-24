@@ -2,7 +2,8 @@ package pl.adamchodera.databasesshowcase.data;
 
 public final class TaskEntity {
 
-    private static final int DEFAULT_ID_FOR_TASK_NOT_SAVED_IN_DB = -1;
+    public static final int DEFAULT_ID_FOR_TASK_NOT_SAVED_IN_DB = -1;
+
     private long id = DEFAULT_ID_FOR_TASK_NOT_SAVED_IN_DB;
     private String title;
     private String description;
