@@ -16,7 +16,10 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".TaskDetailsActivity"/>
+        <activity
+            android:name=".TaskDetailsActivity"
+            android:label="@string/task_details_screen_title"
+            android:parentActivityName=".TasksListActivity"/>
     </application>
 
 </manifest>
