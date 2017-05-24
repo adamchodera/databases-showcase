@@ -143,7 +143,7 @@ public class TasksDataSource {
                 TodoContract.TaskEntry.COLUMN_NAME_COMPLETED
         };
 
-        String selection = TodoContract.TaskEntry._ID + " LIKE ?";
+        String selection = TodoContract.TaskEntry._ID + " = ?";
         String[] selectionArgs = {String.valueOf(taskId)};
 
         Cursor c = db.query(
@@ -176,7 +176,7 @@ public class TasksDataSource {
         values.put(TodoContract.TaskEntry.COLUMN_NAME_DESCRIPTION, task.getDescription());
         values.put(TodoContract.TaskEntry.COLUMN_NAME_COMPLETED, task.isCompleted());
 
-        String selection = TodoContract.TaskEntry._ID + " LIKE ?";
+        String selection = TodoContract.TaskEntry._ID + " = ?";
         String[] selectionArgs = {task.getStringId()};
 
         db.update(TodoContract.TaskEntry.TABLE_NAME, values, selection, selectionArgs);
@@ -188,7 +188,7 @@ public class TasksDataSource {
         ContentValues values = new ContentValues();
         values.put(TodoContract.TaskEntry.COLUMN_NAME_COMPLETED, true);
 
-        String selection = TodoContract.TaskEntry._ID + " LIKE ?";
+        String selection = TodoContract.TaskEntry._ID + " = ?";
         String[] selectionArgs = {task.getStringId()};
 
         db.update(TodoContract.TaskEntry.TABLE_NAME, values, selection, selectionArgs);
@@ -200,7 +200,7 @@ public class TasksDataSource {
         ContentValues values = new ContentValues();
         values.put(TodoContract.TaskEntry.COLUMN_NAME_COMPLETED, false);
 
-        String selection = TodoContract.TaskEntry._ID + " LIKE ?";
+        String selection = TodoContract.TaskEntry._ID + " = ?";
         String[] selectionArgs = {task.getStringId()};
 
         db.update(TodoContract.TaskEntry.TABLE_NAME, values, selection, selectionArgs);
@@ -209,7 +209,7 @@ public class TasksDataSource {
     public void clearCompletedTasks() {
         SQLiteDatabase db = databaseHelper.getWritableDatabase();
 
-        String selection = TodoContract.TaskEntry.COLUMN_NAME_COMPLETED + " LIKE ?";
+        String selection = TodoContract.TaskEntry.COLUMN_NAME_COMPLETED + " = ?";
         String[] selectionArgs = {"1"};
 
         db.delete(TodoContract.TaskEntry.TABLE_NAME, selection, selectionArgs);
@@ -224,7 +224,7 @@ public class TasksDataSource {
     public void deleteTask(@NonNull String taskId) {
         SQLiteDatabase db = databaseHelper.getWritableDatabase();
 
-        String selection = TodoContract.TaskEntry._ID + " LIKE ?";
+        String selection = TodoContract.TaskEntry._ID + " = ?";
         String[] selectionArgs = {taskId};
 
         db.delete(TodoContract.TaskEntry.TABLE_NAME, selection, selectionArgs);
