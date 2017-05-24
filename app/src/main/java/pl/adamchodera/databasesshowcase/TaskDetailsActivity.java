@@ -31,6 +31,7 @@ public class TaskDetailsActivity extends AppCompatActivity {
     FloatingActionButton floatingActionButton;
 
     private TasksDataSource tasksDataSource;
+    private SaveTaskInDatabaseAsyncTask saveTaskInDatabaseAsyncTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +54,9 @@ public class TaskDetailsActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
 
+        if (saveTaskInDatabaseAsyncTask != null) {
+            saveTaskInDatabaseAsyncTask.cancel(true);
+        }
         tasksDataSource.closeDatabase();
     }
 
@@ -63,7 +67,8 @@ public class TaskDetailsActivity extends AppCompatActivity {
 
         final TaskEntity task = new TaskEntity(title, description, false);
 
-        new SaveTaskInDatabaseAsyncTask(task).execute();
+        saveTaskInDatabaseAsyncTask = new SaveTaskInDatabaseAsyncTask(task);
+        saveTaskInDatabaseAsyncTask.execute();
     }
 
     private class SaveTaskInDatabaseAsyncTask extends AsyncTask<String, Void, Boolean> {
