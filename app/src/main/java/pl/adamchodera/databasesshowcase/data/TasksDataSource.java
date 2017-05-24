@@ -53,7 +53,7 @@ public class TasksDataSource {
         databaseHelper.close();
     }
 
-    public void saveTask(@NonNull TaskEntity task) {
+    public long saveTask(@NonNull TaskEntity task) {
         SQLiteDatabase db = databaseHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -61,7 +61,7 @@ public class TasksDataSource {
         values.put(TodoContract.TaskEntry.COLUMN_NAME_DESCRIPTION, task.getDescription());
         values.put(TodoContract.TaskEntry.COLUMN_NAME_COMPLETED, task.isCompleted());
 
-        db.insertOrThrow(TodoContract.TaskEntry.TABLE_NAME, null, values);
+        return db.insert(TodoContract.TaskEntry.TABLE_NAME, null, values);
     }
 
     public List<TaskEntity> getTasks() {
@@ -80,7 +80,7 @@ public class TasksDataSource {
 
         if (c != null && c.getCount() > 0) {
             while (c.moveToNext()) {
-                String itemId = c.getString(c.getColumnIndexOrThrow(TodoContract.TaskEntry._ID));
+                long itemId = c.getLong(c.getColumnIndexOrThrow(TodoContract.TaskEntry._ID));
                 String title = c.getString(c.getColumnIndexOrThrow(TodoContract.TaskEntry.COLUMN_NAME_TITLE));
                 String description =
                         c.getString(c.getColumnIndexOrThrow(TodoContract.TaskEntry.COLUMN_NAME_DESCRIPTION));
@@ -117,7 +117,7 @@ public class TasksDataSource {
 
         if (c != null && c.getCount() > 0) {
             c.moveToFirst();
-            String itemId = c.getString(c.getColumnIndexOrThrow(TodoContract.TaskEntry._ID));
+            long itemId = c.getLong(c.getColumnIndexOrThrow(TodoContract.TaskEntry._ID));
             String title = c.getString(c.getColumnIndexOrThrow(TodoContract.TaskEntry.COLUMN_NAME_TITLE));
             String description =
                     c.getString(c.getColumnIndexOrThrow(TodoContract.TaskEntry.COLUMN_NAME_DESCRIPTION));
@@ -132,6 +132,20 @@ public class TasksDataSource {
         return task;
     }
 
+    public void updateTask(@NonNull TaskEntity task) {
+        SQLiteDatabase db = databaseHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(TodoContract.TaskEntry.COLUMN_NAME_TITLE, task.getTitle());
+        values.put(TodoContract.TaskEntry.COLUMN_NAME_DESCRIPTION, task.getDescription());
+        values.put(TodoContract.TaskEntry.COLUMN_NAME_COMPLETED, task.isCompleted());
+
+        String selection = TodoContract.TaskEntry._ID + " LIKE ?";
+        String[] selectionArgs = {task.getStringId()};
+
+        db.update(TodoContract.TaskEntry.TABLE_NAME, values, selection, selectionArgs);
+    }
+
     public void completeTask(@NonNull TaskEntity task) {
         SQLiteDatabase db = databaseHelper.getWritableDatabase();
 
@@ -139,7 +153,7 @@ public class TasksDataSource {
         values.put(TodoContract.TaskEntry.COLUMN_NAME_COMPLETED, true);
 
         String selection = TodoContract.TaskEntry._ID + " LIKE ?";
-        String[] selectionArgs = {task.getId()};
+        String[] selectionArgs = {task.getStringId()};
 
         db.update(TodoContract.TaskEntry.TABLE_NAME, values, selection, selectionArgs);
     }
@@ -151,7 +165,7 @@ public class TasksDataSource {
         values.put(TodoContract.TaskEntry.COLUMN_NAME_COMPLETED, false);
 
         String selection = TodoContract.TaskEntry._ID + " LIKE ?";
-        String[] selectionArgs = {task.getId()};
+        String[] selectionArgs = {task.getStringId()};
 
         db.update(TodoContract.TaskEntry.TABLE_NAME, values, selection, selectionArgs);
     }

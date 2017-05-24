@@ -27,11 +27,13 @@ public class TaskDetailsActivity extends AppCompatActivity {
     @BindView(R.id.description_edit_text)
     EditText descriptionEditText;
 
-    @BindView(R.id.save_task_button)
+    @BindView(R.id.floating_action_button)
     FloatingActionButton floatingActionButton;
 
     private TasksDataSource tasksDataSource;
-    private SaveTaskInDatabaseAsyncTask saveTaskInDatabaseAsyncTask;
+    private SaveOrEditTaskInDatabaseAsyncTask saveOrEditTaskInDatabaseAsyncTask;
+    private boolean editMode = true;
+    private TaskEntity currentTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,11 +44,15 @@ public class TaskDetailsActivity extends AppCompatActivity {
         tasksDataSource = TasksDataSource.getInstance(this);
 
         final String taskId = getIntent().getStringExtra(INTENT_TASK_ID);
-        if (taskId == null) {
-            // new task
+        if (taskId != null) {
+            // user clicked task from the list
+            setReadonlyMode();
+            currentTask = tasksDataSource.getTask(taskId);
+
+            titleEditText.setText(currentTask.getTitle());
+            descriptionEditText.setText(currentTask.getDescription());
         } else {
-            // edit mode
-            final TaskEntity task = tasksDataSource.getTask(taskId);
+            currentTask = new TaskEntity();
         }
     }
 
@@ -54,40 +60,63 @@ public class TaskDetailsActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
 
-        if (saveTaskInDatabaseAsyncTask != null) {
-            saveTaskInDatabaseAsyncTask.cancel(true);
+        if (saveOrEditTaskInDatabaseAsyncTask != null) {
+            saveOrEditTaskInDatabaseAsyncTask.cancel(true);
         }
         tasksDataSource.closeDatabase();
     }
 
-    @OnClick(R.id.save_task_button)
-    public void saveTask() {
-        String title = titleEditText.getText().toString();
-        String description = descriptionEditText.getText().toString();
+    @OnClick(R.id.floating_action_button)
+    public void onFabClicked() {
+        if (editMode) {
+            // during edit mode we display "done" aka "save" icon on fab button
+            String title = titleEditText.getText().toString();
+            String description = descriptionEditText.getText().toString();
 
-        final TaskEntity task = new TaskEntity(title, description, false);
+            currentTask.setTitle(title);
+            currentTask.setDescription(description);
 
-        saveTaskInDatabaseAsyncTask = new SaveTaskInDatabaseAsyncTask(task);
-        saveTaskInDatabaseAsyncTask.execute();
+            saveOrEditTaskInDatabaseAsyncTask = new SaveOrEditTaskInDatabaseAsyncTask(currentTask);
+            saveOrEditTaskInDatabaseAsyncTask.execute();
+        } else {
+            // user clicked on the pencil icon so he wants to enable edit mode
+            setEditMode();
+        }
     }
 
-    private class SaveTaskInDatabaseAsyncTask extends AsyncTask<String, Void, Boolean> {
+    private void setReadonlyMode() {
+        editMode = false;
+        titleEditText.setEnabled(false);
+        descriptionEditText.setEnabled(false);
+        floatingActionButton.setImageResource(R.drawable.ic_mode_edit_white_24px);
+    }
+
+    private void setEditMode() {
+        editMode = true;
+        titleEditText.setEnabled(true);
+        descriptionEditText.setEnabled(true);
+        floatingActionButton.setImageResource(R.drawable.ic_done_white_24px);
+    }
+
+    private class SaveOrEditTaskInDatabaseAsyncTask extends AsyncTask<String, Void, Boolean> {
 
         private final TaskEntity task;
 
-        SaveTaskInDatabaseAsyncTask(final TaskEntity task) {
+        SaveOrEditTaskInDatabaseAsyncTask(final TaskEntity task) {
             this.task = task;
         }
 
         @Override
         protected Boolean doInBackground(String... params) {
-            try {
-                tasksDataSource.saveTask(task);
-            } catch (Exception e) {
-                return false;
+            if (task.isTaskInDatabase()) {
+                tasksDataSource.updateTask(task);
+                return true;
+            } else {
+                // we're saving new task in database
+                final long taskId = tasksDataSource.saveTask(task);
+                currentTask.setId(taskId);
+                return currentTask.isTaskInDatabase();
             }
-
-            return true;
         }
 
         @Override
@@ -97,11 +126,10 @@ public class TaskDetailsActivity extends AppCompatActivity {
             String message;
             if (success) {
                 message = "Task saved!";
-                titleEditText.setEnabled(false);
-                descriptionEditText.setEnabled(false);
-                floatingActionButton.setImageResource(R.drawable.ic_mode_edit_white_24px);
+                setReadonlyMode();
             } else {
                 message = "Error occurred..";
+                setEditMode();
             }
 
             Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_LONG)
