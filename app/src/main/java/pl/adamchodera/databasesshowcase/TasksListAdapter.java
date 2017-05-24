@@ -2,11 +2,13 @@ package pl.adamchodera.databasesshowcase;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import java.util.List;
@@ -15,7 +17,12 @@ import pl.adamchodera.databasesshowcase.data.TaskEntity;
 
 public class TasksListAdapter extends RecyclerView.Adapter<TasksListAdapter.ViewHolder> {
 
+    private final TaskCompleteListener taskCompleteListener;
     private List<TaskEntity> tasks;
+
+    public TasksListAdapter(final TaskCompleteListener taskCompleteListener) {
+        this.taskCompleteListener = taskCompleteListener;
+    }
 
     @Override
     public TasksListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -42,6 +49,16 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListAdapter.View
                 context.startActivity(intent);
             }
         });
+
+        viewHolder.checkbox.setChecked(false);
+
+        viewHolder.checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
+                task.setCompleted(true);
+                taskCompleteListener.onTaskCompleted(task);
+            }
+        });
     }
 
     @Override
@@ -58,14 +75,20 @@ public class TasksListAdapter extends RecyclerView.Adapter<TasksListAdapter.View
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public LinearLayout rootView;
+        public ConstraintLayout rootView;
         public TextView taskTitleView;
+        public CheckBox checkbox;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
-            rootView = (LinearLayout) itemView.findViewById(R.id.item_task_root_view);
+            rootView = (ConstraintLayout) itemView.findViewById(R.id.item_task_root_view);
             taskTitleView = (TextView) itemView.findViewById(R.id.task_title);
+            checkbox = (CheckBox) itemView.findViewById(R.id.checkbox);
         }
+    }
+
+    public interface TaskCompleteListener {
+        void onTaskCompleted(final TaskEntity task);
     }
 }

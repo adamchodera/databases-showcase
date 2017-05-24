@@ -97,6 +97,42 @@ public class TasksDataSource {
         return tasks;
     }
 
+    public List<TaskEntity> getNotCompletedTasks() {
+        List<TaskEntity> tasks = new ArrayList<TaskEntity>();
+        // The database connection is cached so it's not expensive to call getReadableDatabase() multiple times
+        SQLiteDatabase db = databaseHelper.getReadableDatabase();
+
+        String[] projection = {
+                TodoContract.TaskEntry._ID,
+                TodoContract.TaskEntry.COLUMN_NAME_TITLE,
+                TodoContract.TaskEntry.COLUMN_NAME_DESCRIPTION,
+                TodoContract.TaskEntry.COLUMN_NAME_COMPLETED
+        };
+
+        String selection = TodoContract.TaskEntry.COLUMN_NAME_COMPLETED + " = ?";
+        String[] selectionArgs = { "0" };
+
+        Cursor c = db.query(TodoContract.TaskEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, null);
+
+        if (c != null && c.getCount() > 0) {
+            while (c.moveToNext()) {
+                long itemId = c.getLong(c.getColumnIndexOrThrow(TodoContract.TaskEntry._ID));
+                String title = c.getString(c.getColumnIndexOrThrow(TodoContract.TaskEntry.COLUMN_NAME_TITLE));
+                String description =
+                        c.getString(c.getColumnIndexOrThrow(TodoContract.TaskEntry.COLUMN_NAME_DESCRIPTION));
+                boolean completed =
+                        c.getInt(c.getColumnIndexOrThrow(TodoContract.TaskEntry.COLUMN_NAME_COMPLETED)) == 1;
+                TaskEntity task = new TaskEntity(itemId, title, description, completed);
+                tasks.add(task);
+            }
+        }
+        if (c != null) {
+            c.close();
+        }
+
+        return tasks;
+    }
+
     public TaskEntity getTask(@NonNull long taskId) {
         SQLiteDatabase db = databaseHelper.getReadableDatabase();
 
