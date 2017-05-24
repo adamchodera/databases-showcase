@@ -6,10 +6,10 @@ import org.greenrobot.greendao.annotation.Property;
 import org.greenrobot.greendao.annotation.Generated;
 
 @Entity(nameInDb = "tasks")
-public class TaskEntity {
+public class Task {
 
     @Id(autoincrement = true)
-    private long id;
+    private Long id;
 
     private String title;
 
@@ -18,49 +18,40 @@ public class TaskEntity {
     @Property(nameInDb = "completed")
     private boolean isCompleted;
 
-    @Generated(hash = 1994309273)
-    public TaskEntity(long id, String title, String description,
-            boolean isCompleted) {
+    @Generated(hash = 1852131448)
+    public Task(Long id, String title, String description, boolean isCompleted) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.isCompleted = isCompleted;
     }
 
-    @Generated(hash = 397975341)
-    public TaskEntity() {
+    @Generated(hash = 733837707)
+    public Task() {
     }
 
-    public long getId() {
-        return id;
+    public Long getId() {
+        return this.id;
     }
 
-    public void setId(final long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
     public String getTitle() {
-        return title;
+        return this.title;
     }
 
-    public void setTitle(final String title) {
+    public void setTitle(String title) {
         this.title = title;
     }
 
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
-    public void setDescription(final String description) {
+    public void setDescription(String description) {
         this.description = description;
-    }
-
-    public boolean isCompleted() {
-        return isCompleted;
-    }
-
-    public void setCompleted(final boolean completed) {
-        isCompleted = completed;
     }
 
     public boolean getIsCompleted() {
@@ -70,4 +61,5 @@ public class TaskEntity {
     public void setIsCompleted(boolean isCompleted) {
         this.isCompleted = isCompleted;
     }
+
 }
