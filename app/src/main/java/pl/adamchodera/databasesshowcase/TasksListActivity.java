@@ -78,10 +78,10 @@ public class TasksListActivity extends AppCompatActivity implements TasksListAda
         setTaskAsCompletedAsyncTask.execute();
     }
 
-    private class LoadTasksFromDatabaseAsyncTask extends AsyncTask<String, Void, List<TaskEntity>> {
+    private class LoadTasksFromDatabaseAsyncTask extends AsyncTask<Void, Void, List<TaskEntity>> {
 
         @Override
-        protected List<TaskEntity> doInBackground(String... params) {
+        protected List<TaskEntity> doInBackground(Void... params) {
             return tasksDataSource.getNotCompletedTasks();
         }
 
